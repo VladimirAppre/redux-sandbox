@@ -1,51 +1,40 @@
-import {createStore} from "redux";
+import {bindActionCreators, createStore} from "redux";
+import reducer from "./reducer";
+import * as actions from './actions'
 
-//reducer
-const reducer = (state = 0, action) => {
-
-  switch (action.type) {
-    case 'INC':
-      return state + 1;
-    case 'DEC':
-      return state - 1;
-    case 'RND':
-      return state + action.payload;
-
-    default:
-      return state;
-  }
-  ;
-};
-
-//sore
 const store = createStore(reducer);
+const {dispatch} = store;
 
 
-//action creators
-const inc = () => ({type: 'INC'});
-const dec = () => ({type: 'DEC'});
-const rnd = () => ({type: 'RND', payload: Math.floor(Math.random()*10)});
+// const incDispatch = () => dispatch(inc());
+// const decDispatch = () => dispatch(dec());
+// const rndDispatch = (payload) => dispatch(rnd(payload));
 
+//my bind action creators
+// const bindActionCreator = (cretor, dispatch) => (...args) => {
+//   dispatch(cretor(...args));
+// };
 
+// const incDispatch = bindActionCreator(inc ,dispatch)
+// const decDispatch = bindActionCreator(dec ,dispatch)
+// const rndDispatch = bindActionCreator(rnd ,dispatch)
 
-document.getElementById('dec')
-  .addEventListener('click',()=>{
-    store.dispatch(dec());
-  });
+const {inc, dec, rnd} = bindActionCreators(actions, dispatch);
 
 document.getElementById('inc')
-  .addEventListener('click',()=>{
-    store.dispatch(inc());
-  });
+  .addEventListener('click', inc);
+
+document.getElementById('dec')
+  .addEventListener('click', dec);
+
 
 document.getElementById('rnd')
-  .addEventListener('click',()=>{
-    store.dispatch(rnd());
-  });
+  .addEventListener('click', rnd);
 
 const update = () => {
-document.getElementById('counter').innerHTML = store.getState();
-}
+  document.getElementById('counter').innerHTML = store.getState();
+};
+
 store.subscribe(update)
 
 
